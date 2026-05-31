@@ -4,6 +4,7 @@ from flask import render_template, request, session, redirect
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
+from destinations import get_destinations, add_destination, get_destination
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -31,6 +32,7 @@ def create():
         sql = "INSERT INTO Users (username, password_hash) VALUES (?, ?)"
         db.execute(sql, [username, password_hash])
         session["username"] = username
+        session["user_id"] = db.last_insert_id()
         return redirect("/destinations")
         
     except sqlite3.IntegrityError:
@@ -45,11 +47,14 @@ def login_form():
     username = request.form["username"]
     password = request.form["password"]
     
-    sql = "SELECT password_hash FROM Users WHERE username = ?"
+    sql = "SELECT password_hash, user_id FROM Users WHERE username = ?"
     password_hash = db.query(sql, [username])[0][0]
+    user_id = db.query(sql, [username])[0][1]
 
     if check_password_hash(password_hash, password):
         session["username"] = username
+        session["user_id"] = user_id
+
         return redirect("/destinations")
     else:
         return "VIRHE: väärä tunnus tai salasana"
@@ -61,4 +66,19 @@ def logout():
 
 @app.route("/destinations", methods=["GET"])
 def destinations():
-    return "destinations"
+    destinations = get_destinations()
+    return render_template("destinations.html", destinations=destinations, session=session)
+
+@app.route("/new_destination", methods=["POST"])
+def new_thread():
+    name = request.form["name"]
+    description = request.form["description"]
+    user_id = session["user_id"]
+
+    thread_id = add_destination(name, description, user_id)
+    return redirect("/destination/" + str(thread_id))
+
+@app.route("/destination/<int:destination_id>")
+def show_destination(destination_id):
+    destination = get_destination(destination_id)
+    return render_template("destination.html", destination=destination)

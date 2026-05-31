@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matkakohteet</title>
+  </head>
+  <body>
+    <h1>Matkakohteet</h1>
+    {% for destination in destinations %}
+    <p>
+      <a href="/destinations/{{ destination.id }}">{{ destination.name }}</a>
+      <br />
+      {{ thread.total }} viestiä
+    </p>
+    <hr />
+    {% endfor %} {% if session.user_id %}
+    <h2>Uusi matkakohde</h2>
+
+    <form action="/new_destination" method="post">
+      <p>
+        Matkakohde: <br />
+        <input type="text" name="name" />
+      </p>
+      <p>
+        Kuvaus: <br />
+        <textarea name="description" rows="5" cols="40"></textarea>
+      </p>
+      <input type="submit" value="Lähetä" />
+    </form>
+    {% endif %}
+  </body>
+</html>
