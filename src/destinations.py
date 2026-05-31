@@ -24,3 +24,14 @@ def update_destination(destination_id, description):
 def remove_destination(destination_id):
     sql = "DELETE FROM Destinations WHERE destination_id = ?"
     db.execute(sql, [destination_id])
+
+def search(query):
+    sql = """SELECT destination_id,
+                    name,
+                    user_id,
+                    description
+             FROM Destinations
+             WHERE description LIKE ?
+             ORDER BY destination_id DESC"""
+    return db.query(sql, ["%" + query + "%"])
+

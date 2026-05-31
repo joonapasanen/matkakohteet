@@ -4,7 +4,7 @@ from flask import render_template, request, session, redirect
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
-from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination
+from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination, search
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -106,3 +106,9 @@ def remove_trip_destination(destination_id):
         if "continue" in request.form:
             remove_destination(destination["destination_id"])
         return redirect("/destinations")
+    
+@app.route("/search")
+def search_results():
+    query = request.args.get("query")
+    results = search(query) if query else []
+    return render_template("search.html", query=query, results=results)
