@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Käyttäjän rekisteröinti</title>
+  </head>
+  <body>
+    <div>
+      <h1>Rekisteröidy</h1>
+      <form action="/register" method="POST">
+        <p>
+          <input
+            type="text"
+            name="username"
+            placeholder="Käyttäjänimi"
+            required
+          />
+        </p>
+        <p>
+          <input
+            type="password"
+            name="password"
+            placeholder="Salasana"
+            required
+          />
+        </p>
+        <p>
+          <input type="email" name="email" placeholder="Sähköposti" required />
+        </p>
+        <button type="submit">Luo tili</button>
+      </form>
+      <p>Onko sinulla jo tili? <a href="/login">Kirjaudu sisään</a>.</p>
+    </div>
+  </body>
+</html>
