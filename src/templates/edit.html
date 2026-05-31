@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Muokkaa</title>
+  </head>
+  <body>
+    <form action="/edit/{{ destination.destination_id }}" method="post">
+      <p>
+        Viesti:<br />
+        <textarea name="description" rows="5" cols="40">
+{{ destination.description }}</textarea
+        >
+      </p>
+      <input type="submit" value="Lähetä" />
+    </form>
+  </body>
+</html>

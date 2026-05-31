@@ -4,7 +4,7 @@ from flask import render_template, request, session, redirect
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
-from destinations import get_destinations, add_destination, get_destination
+from destinations import get_destinations, add_destination, get_destination, update_destination
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -76,9 +76,21 @@ def new_thread():
     user_id = session["user_id"]
 
     thread_id = add_destination(name, description, user_id)
-    return redirect("/destination/" + str(thread_id))
+    return redirect("/destinations/" + str(thread_id))
 
-@app.route("/destination/<int:destination_id>")
+@app.route("/destinations/<int:destination_id>")
 def show_destination(destination_id):
     destination = get_destination(destination_id)
     return render_template("destination.html", destination=destination)
+
+@app.route("/edit/<int:destination_id>", methods=["GET", "POST"])
+def edit_destination(destination_id):
+    destination = get_destination(destination_id)
+
+    if request.method == "GET":
+        return render_template("edit.html", destination=destination)
+
+    if request.method == "POST":
+        description = request.form["description"]
+        update_destination(destination["destination_id"], description)
+        return redirect("/destinations/" + str(destination["destination_id"]))

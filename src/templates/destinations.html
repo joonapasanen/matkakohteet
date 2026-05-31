@@ -8,11 +8,19 @@
   <body>
     <h1>Matkakohteet</h1>
     {% for destination in destinations %}
+
+    <h2>Matkakohde:</h2>
+    <a href="/destinations/{{ destination.destination_id }}"
+      >{{ destination.name }}</a
+    >
+    <h3>Kuvaus:</h3>
+    {{ destination.description }} {% if destination.user_id == session.user_id
+    %}
     <p>
-      <a href="/destinations/{{ destination.id }}">{{ destination.name }}</a>
-      <br />
-      {{ thread.total }} viestiä
+      <a href="/edit/{{ destination.destination_id }}">Muokkaa</a> |
+      <a href="/remove/{{ destination.destination_id }}">Poista</a>
     </p>
+    {% endif %}
     <hr />
     {% endfor %} {% if session.user_id %}
     <h2>Uusi matkakohde</h2>
