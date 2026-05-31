@@ -1,14 +1,17 @@
 import sqlite3
 from flask import Flask
-from flask import render_template, request
-from werkzeug.security import generate_password_hash
-
+from flask import render_template, request, session, redirect
+from werkzeug.security import generate_password_hash, check_password_hash
+import config
 import db
 
 app = Flask(__name__)
+app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
+    if "username" in session:
+        redirect("/destinations")
     return render_template("index.html")
 
 @app.route("/register")
@@ -25,17 +28,37 @@ def create():
     password_hash = generate_password_hash(password1)
 
     try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+        sql = "INSERT INTO Users (username, password_hash) VALUES (?, ?)"
         db.execute(sql, [username, password_hash])
+        session["username"] = username
+        return redirect("/destinations")
+        
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
-
-    return "Tunnus luotu"
-
-@app.route("/login", methods=["GET", "POST"])
+    
+@app.route("/login")
 def login():
     return render_template("login.html")
 
+@app.route("/login_form", methods=["POST"])
+def login_form():
+    username = request.form["username"]
+    password = request.form["password"]
+    
+    sql = "SELECT password_hash FROM Users WHERE username = ?"
+    password_hash = db.query(sql, [username])[0][0]
+
+    if check_password_hash(password_hash, password):
+        session["username"] = username
+        return redirect("/destinations")
+    else:
+        return "VIRHE: väärä tunnus tai salasana"
+
+@app.route("/logout")
+def logout():
+    del session["username"]
+    redirect("/")
+
 @app.route("/destinations", methods=["GET"])
 def destinations():
-    pass
+    return "destinations"
