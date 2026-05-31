@@ -8,24 +8,20 @@
   <body>
     <div>
       <h1>Rekisteröidy</h1>
-      <form action="/register" method="POST">
+      <form action="/create" method="post">
         <p>
-          <input
-            type="text"
-            name="username"
-            placeholder="Käyttäjänimi"
-            required
-          />
+          Tunnus: <br />
+          <input type="text" name="username" />
         </p>
         <p>
-          <input
-            type="password"
-            name="password"
-            placeholder="Salasana"
-            required
-          />
+          Salasana: <br />
+          <input type="password" name="password1" />
         </p>
-        <button type="submit">Luo tili</button>
+        <p>
+          Salasana uudestaan: <br />
+          <input type="password" name="password2" />
+        </p>
+        <input type="submit" value="Luo tunnus" />
       </form>
       <p>Onko sinulla jo tili? <a href="/login">Kirjaudu sisään</a>.</p>
     </div>
