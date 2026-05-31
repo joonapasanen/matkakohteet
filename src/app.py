@@ -4,7 +4,7 @@ from flask import render_template, request, session, redirect
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
-from destinations import get_destinations, add_destination, get_destination, update_destination
+from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -94,3 +94,15 @@ def edit_destination(destination_id):
         description = request.form["description"]
         update_destination(destination["destination_id"], description)
         return redirect("/destinations/" + str(destination["destination_id"]))
+    
+@app.route("/remove/<int:destination_id>", methods=["GET", "POST"])
+def remove_trip_destination(destination_id):
+    destination = get_destination(destination_id)
+
+    if request.method == "GET":
+        return render_template("remove.html", destination=destination)
+
+    if request.method == "POST":
+        if "continue" in request.form:
+            remove_destination(destination["destination_id"])
+        return redirect("/destinations")

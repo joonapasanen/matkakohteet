@@ -20,3 +20,7 @@ def get_destination(destination_id):
 def update_destination(destination_id, description):
     sql = "UPDATE Destinations SET description = ? WHERE destination_id = ?"
     db.execute(sql, [description, destination_id])
+
+def remove_destination(destination_id):
+    sql = "DELETE FROM Destinations WHERE destination_id = ?"
+    db.execute(sql, [destination_id])
