@@ -1,5 +1,9 @@
 # matkakohteet
 
+Käynnistysohjeet:
+
+Alusta database.db niminen tiedosto projektin juurihakemistoon ja kopio sinne schema.sql:n sisältö. Sitten sovellusta voi käyttää flask run komennolla src hakemiston sisältä.
+
 Sovelluksen toiminnallisuus:
 
 - Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.

@@ -1,8 +1,7 @@
 CREATE TABLE Users (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL
+    password_hash TEXT NOT NULL
 );
 
 CREATE TABLE Destinations (
