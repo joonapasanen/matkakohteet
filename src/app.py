@@ -11,9 +11,9 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    if "username" in session:
-        redirect("/destinations")
-    return render_template("index.html")
+    query = request.args.get("query", "")
+    destinations = get_destinations()
+    return render_template("index.html", query=query, destinations=destinations)
 
 @app.route("/register")
 def register():
