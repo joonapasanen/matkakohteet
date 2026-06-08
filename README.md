@@ -2,7 +2,9 @@
 
 Käynnistysohjeet:
 
-Alusta database.db niminen tiedosto projektin juurihakemistoon ja kopio sinne schema.sql:n sisältö. Sitten sovellusta voi käyttää flask run komennolla src hakemiston sisältä.
+Luo tietokanta komennolla: sqlite3 database.db < schema.sql
+
+Käynnistä sovellus komennolla: flask --app src/app.py run
 
 Sovelluksen toiminnallisuus:
 
