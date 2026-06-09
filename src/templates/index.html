@@ -3,20 +3,7 @@ content %}
 
 <h2>Etusivu</h2>
 
-{% if destinations %}
-
-<form action="/search" method="get">
-  <p>
-    Hakusana: {% if query %}
-    <input type="text" name="query" value="{{ query }}" />
-    {% else %}
-    <input type="text" name="query" />
-    {% endif %}
-  </p>
-  <input type="submit" value="Hae" />
-</form>
-
-{% for destination in destinations %}
+{% if destinations %} {% for destination in destinations %}
 <div class="destination">
   <h2>Matkakohde:</h2>
   <a href="/destinations/{{ destination.destination_id }}"

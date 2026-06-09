@@ -1,24 +1,42 @@
-<!doctype html>
-<html lang="fi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hakutulokset</title>
-  </head>
-  <body>
-    {% if query %}
-    <h1>Tulokset</h1>
+{% extends "layout.html" %} {% block title %}Haku{% endblock %} {% block content
+%}
 
-    <ul>
-      {% for result in results %}
-      <li>
-        <a href="/destinations/{{ result.destination_id }}">
-          {{ result.name }}
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
+<h2>Haku</h2>
+
+<form class="search" action="/search" method="get">
+  <p>
+    Hakusana: {% if query %}
+    <input type="text" name="query" value="{{ query }}" />
+    {% else %}
+    <input type="text" name="query" />
     {% endif %}
-    <a href="/destinations">Takaisin</a>
-  </body>
-</html>
+  </p>
+  <input type="submit" value="Hae" />
+</form>
+
+<h2>Tulokset</h2>
+
+<div>
+  {% if query %} {% if results %}
+  <ul>
+    {% for result in results %}
+    <li>
+      <a href="/destinations/{{ result.destination_id }}">
+        {{ result.name }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {% else %}
+
+  <p>Ei hakua vastaavia kohteita...</p>
+
+  {% endif %} {% else %}
+  <p>Hae matkakohteita!</p>
+  {% endif %}
+</div>
+
+<a href="/">Takaisin</a>
+
+{% endblock %}

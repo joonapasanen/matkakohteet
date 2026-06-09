@@ -53,3 +53,14 @@ nav li {
 nav li:not(:last-of-type) {
   border-right: 1px solid black;
 }
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search button {
+  height: auto;
+  width: auto;
+}
