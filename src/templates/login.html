@@ -1,33 +1,18 @@
-<!doctype html>
-<html lang="fi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sisään kirjautuminen</title>
-  </head>
-  <body>
-    <div>
-      <h1>Kirjautuminen</h1>
-      <form action="/login_form" method="POST">
-        <p>
-          <input
-            type="text"
-            name="username"
-            placeholder="Käyttäjänimi"
-            required
-          />
-        </p>
-        <p>
-          <input
-            type="password"
-            name="password"
-            placeholder="Salasana"
-            required
-          />
-        </p>
-        <button type="submit">Kirjaudu sisään</button>
-      </form>
-      <p>Eikö sinulla ole tiliä? <a href="/register">Luo tili</a>.</p>
-    </div>
-  </body>
-</html>
+{% extends "layout.html" %} {% block title %}Kirjautuminen{% endblock %} {%
+block content %}
+
+<div>
+  <h1>Kirjautuminen</h1>
+  <form action="/login_form" method="POST">
+    <p>
+      <input type="text" name="username" placeholder="Käyttäjänimi" required />
+    </p>
+    <p>
+      <input type="password" name="password" placeholder="Salasana" required />
+    </p>
+    <button type="submit">Kirjaudu sisään</button>
+  </form>
+  <p>Eikö sinulla ole tiliä? <a href="/register">Luo tili</a>.</p>
+</div>
+
+{% endblock %}
