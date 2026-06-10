@@ -2,16 +2,19 @@
 block content %}
 
 <div>
-  <h1>Kirjautuminen</h1>
+  <h2>Kirjautuminen</h2>
   <form action="/login_form" method="POST">
     <p>
-      <input type="text" name="username" placeholder="Käyttäjänimi" required />
+      Käyttäjänimi: <br />
+      <input type="text" name="username" required />
     </p>
     <p>
-      <input type="password" name="password" placeholder="Salasana" required />
+      Salasana: <br />
+      <input type="password" name="password" required />
     </p>
     <button type="submit">Kirjaudu sisään</button>
   </form>
+  <hr />
   <p>Eikö sinulla ole tiliä? <a href="/register">Luo tili</a>.</p>
 </div>
 

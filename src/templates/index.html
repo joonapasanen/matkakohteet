@@ -3,36 +3,32 @@ content %}
 
 <h2>Etusivu</h2>
 
+{% if session.user_id %}
+<hr />
+<div class="add-destination">
+  <h2>Uusi matkakohde</h2>
+
+  <form action="/new_destination" method="post">
+    <p>
+      Matkakohde: <br />
+      <input type="text" name="name" />
+    </p>
+    <p>
+      Kuvaus: <br />
+      <textarea name="description" rows="5" cols="40"></textarea>
+    </p>
+    <input type="submit" value="Lähetä" />
+  </form>
+</div>
+{% endif %}
+<hr />
 {% if destinations %} {% for destination in destinations %}
 <div class="destination">
-  <h2>Matkakohde:</h2>
   <a href="/destinations/{{ destination.destination_id }}"
     >{{ destination.name }}</a
   >
-  <h3>Kuvaus:</h3>
-  {{ destination.description }} {% if destination.user_id == session.user_id %}
-  <p>
-    <a href="/edit/{{ destination.destination_id }}">Muokkaa</a> |
-    <a href="/remove/{{ destination.destination_id }}">Poista</a>
-  </p>
-  {% endif %}
-  <hr />
 </div>
 {% endfor %} {% else %}
 <p>Ei lisättyjä matkakohteita...</p>
 
-{% endif %} {% if session.user_id %}
-<h2>Uusi matkakohde</h2>
-
-<form action="/new_destination" method="post">
-  <p>
-    Matkakohde: <br />
-    <input type="text" name="name" />
-  </p>
-  <p>
-    Kuvaus: <br />
-    <textarea name="description" rows="5" cols="40"></textarea>
-  </p>
-  <input type="submit" value="Lähetä" />
-</form>
 {% endif %} {% endblock %}

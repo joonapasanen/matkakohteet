@@ -32,7 +32,7 @@ def create():
         db.execute(sql, [username, password_hash])
         session["username"] = username
         session["user_id"] = db.last_insert_id()
-        return redirect("/destinations")
+        return redirect("/")
         
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
@@ -54,14 +54,15 @@ def login_form():
         session["username"] = username
         session["user_id"] = user_id
 
-        return redirect("/destinations")
+        return redirect("/")
     else:
         return "VIRHE: väärä tunnus tai salasana"
 
 @app.route("/logout")
 def logout():
     del session["username"]
-    redirect("/")
+    del session["user_id"]
+    return redirect("/")
 
 @app.route("/destinations", methods=["GET"])
 def destinations():
@@ -74,8 +75,8 @@ def new_thread():
     description = request.form["description"]
     user_id = session["user_id"]
 
-    thread_id = add_destination(name, description, user_id)
-    return redirect("/destinations/" + str(thread_id))
+    add_destination(name, description, user_id)
+    return redirect("/")
 
 @app.route("/destinations/<int:destination_id>")
 def show_destination(destination_id):
@@ -104,7 +105,7 @@ def remove_trip_destination(destination_id):
     if request.method == "POST":
         if "continue" in request.form:
             remove_destination(destination["destination_id"])
-        return redirect("/destinations")
+        return redirect("/")
     
 @app.route("/search")
 def search_results():
