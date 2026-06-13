@@ -8,8 +8,15 @@ CREATE TABLE Destinations (
     destination_id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     name TEXT NOT NULL,
+    price_category_id INTEGER NOT NULL,
+    rating INTEGER NOT NULL,
     description TEXT,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE PriceCategories (
+    price_category_id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE Images (
@@ -17,19 +24,6 @@ CREATE TABLE Images (
     destination_id INTEGER NOT NULL,
     image_url TEXT NOT NULL,
     FOREIGN KEY (destination_id) REFERENCES Destinations(destination_id) ON DELETE CASCADE
-);
-
-CREATE TABLE Categories (
-    category_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE DestinationCategories (
-    destination_id INTEGER NOT NULL,
-    category_id INTEGER NOT NULL,
-    PRIMARY KEY (destination_id, category_id),
-    FOREIGN KEY (destination_id) REFERENCES Destinations(destination_id) ON DELETE CASCADE,
-    FOREIGN KEY (category_id) REFERENCES Categories(category_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Comments (
@@ -40,3 +34,8 @@ CREATE TABLE Comments (
     FOREIGN KEY (destination_id) REFERENCES Destinations(destination_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
+
+INSERT INTO PriceCategories (price_category_id, name) VALUES 
+(1, 'Halpa'), 
+(2, 'Kohtuullinen'), 
+(3, 'Kallis');

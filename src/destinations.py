@@ -14,9 +14,9 @@ def get_destinations():
     """
     return db.query(sql)
 
-def add_destination(name, description, user_id):
-    sql = "INSERT INTO Destinations (user_id, name, description) VALUES (?, ?, ?)"
-    db.execute(sql, [user_id, name, description])
+def add_destination(name, description, user_id, price_category_id, rating):
+    sql = "INSERT INTO Destinations (user_id, name, description, price_category_id, rating) VALUES (?, ?, ?, ?, ?)"
+    db.execute(sql, [user_id, name, description, price_category_id, rating])
     thread_id = db.last_insert_id()
     return thread_id
 
@@ -27,9 +27,12 @@ def get_destination(destination_id):
             d.name,
             d.description,
             d.user_id,
+            pc.name AS price_category,
+            d.rating,
             u.username
         FROM Destinations d
         JOIN Users u ON d.user_id = u.user_id
+        JOIN PriceCategories pc ON d.price_category_id = pc.price_category_id
         WHERE d.destination_id = ?
     """
     rows = db.query(sql, [destination_id])
@@ -78,7 +81,7 @@ def get_user_stats(user_id):
     """
     rows = db.query(sql, [user_id])
     if not rows:
-        return {"destination_count": 0}  # Palautetaan oletusarvo, jos käyttäjällä ei ole kohteita
+        return {"destination_count": 0}
     row = rows[0]
     return {
         "destination_count": row["destination_count"],

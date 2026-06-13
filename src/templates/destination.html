@@ -2,6 +2,9 @@
 {% block content %}
 <h1>{{ destination.name }}</h1>
 <p>{{ destination.description }}</p>
+<p><strong>Hintaluokka:</strong> {{ destination.price_category }}</p>
+<p><strong>Arvostelu:</strong> {{ destination.rating }}</p>
+
 <p>
   Lähettäjä:
   <a href="/users/{{ destination.user_id }}"> {{ destination.username }} </a>

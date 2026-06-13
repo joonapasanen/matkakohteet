@@ -61,8 +61,10 @@ def new_destination():
     name = request.form["name"]
     description = request.form["description"]
     user_id = session["user_id"]
+    price_category_id = request.form["price_category_id"]
+    rating = request.form["rating"]  
 
-    add_destination(name, description, user_id)
+    add_destination(name, description, user_id, price_category_id, rating)
     destination_id = db.last_insert_id()
     return redirect("/destinations/" + str(destination_id))
 
