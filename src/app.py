@@ -3,6 +3,7 @@ import config
 import db
 from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination, search, get_destinations_by_user, get_user_stats
 from users import register_user, login_user, logout_user, get_user
+from comments import add_comment, get_comments, get_comment, remove_comment
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -71,7 +72,8 @@ def new_destination():
 @app.route("/destinations/<int:destination_id>")
 def show_destination(destination_id):
     destination = get_destination(destination_id)
-    return render_template("destination.html", destination=destination)
+    comments = get_comments(destination_id)
+    return render_template("destination.html", destination=destination, comments=comments)
 
 @app.route("/edit/<int:destination_id>", methods=["GET", "POST"])
 def edit_destination(destination_id):
@@ -90,7 +92,7 @@ def remove_trip_destination(destination_id):
     destination = get_destination(destination_id)
 
     if request.method == "GET":
-        return render_template("remove.html", destination=destination)
+        return render_template("remove_destination.html", destination=destination)
 
     if request.method == "POST":
         if "continue" in request.form:
@@ -113,3 +115,32 @@ def user_profile(user_id):
     stats = get_user_stats(user_id)
 
     return render_template("user.html", user=user, destinations=user_destinations, stats=stats)
+
+@app.route("/add_comment/<int:destination_id>", methods=["POST"])
+def add_comment_route(destination_id):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+    comment = request.form["comment"]
+
+    add_comment(destination_id, user_id, comment)
+
+    return redirect(f"/destinations/{destination_id}")
+
+@app.route("/remove_comment/<int:comment_id>", methods=["GET", "POST"])
+def remove_comment_route(comment_id):
+    comment = get_comment(comment_id)
+
+    destination_id = comment["destination_id"]
+
+    if comment is None:
+        return "Comment not found", 404
+
+    if request.method == "GET":
+        return render_template("remove_comment.html", comment=comment)
+
+    if request.method == "POST":
+        if "continue" in request.form:
+            remove_comment(comment["comment_id"])
+        return redirect("/destinations/" + str(destination_id))

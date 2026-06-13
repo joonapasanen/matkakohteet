@@ -14,4 +14,34 @@
   <a href="/edit/{{ destination.destination_id }}">Muokkaa</a> |
   <a href="/remove/{{ destination.destination_id }}">Poista</a>
 </p>
+{% endif %}
+
+<h2>Lisää kommentti</h2>
+<form action="/add_comment/{{ destination.destination_id }}" method="post">
+  <textarea
+    name="comment"
+    rows="5"
+    cols="40"
+    required
+    placeholder="Kirjoita kommentti..."
+  ></textarea
+  ><br />
+  <input type="submit" value="Lähetä kommentti" />
+</form>
+
+<h2>Kommentit</h2>
+
+{% if comments %}
+<ul>
+  {% for comment in comments %}
+  <li>
+    <strong>{{ comment.username }}:</strong> {{ comment.comment }} {% if
+    comment.user_id == session.user_id %} |
+    <a href="/remove_comment/{{ comment.comment_id }}">Poista</a>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Ei kommentteja vielä.</p>
 {% endif %} {% endblock %}

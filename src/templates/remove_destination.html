@@ -1,7 +1,10 @@
 {% extends "layout.html" %} {% block title %}Poista kohde{% endblock %} {% block
 content %}
-<form action="/remove/{{ destination.destination_id }}" method="post">
-  <p>Haluatko varmasti poistaa viestin?</p>
+<form
+  action="/remove_destination/{{ destination.destination_id }}"
+  method="post"
+>
+  <p>Haluatko varmasti poistaa kohteen?</p>
   <input type="submit" name="continue" value="Jatka" />
   <input type="submit" name="cancel" value="Peruuta" />
 </form>
