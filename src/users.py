@@ -11,6 +11,7 @@ def register_user(username, password):
         db.execute(sql, [username, password_hash])
         session["username"] = username
         session["user_id"] = db.last_insert_id()
+        session["csrf_token"] = secrets.token_hex(16)
     except sqlite3.IntegrityError:
         return False
     return True

@@ -12,7 +12,7 @@
 {% if destination.user_id == session.user_id %}
 <p>
   <a href="/edit/{{ destination.destination_id }}">Muokkaa</a> |
-  <a href="/remove/{{ destination.destination_id }}">Poista</a>
+  <a href="/remove_destination/{{ destination.destination_id }}">Poista</a>
 </p>
 {% endif %}
 

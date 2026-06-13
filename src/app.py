@@ -96,7 +96,7 @@ def edit_destination(destination_id):
         update_destination(destination["destination_id"], description)
         return redirect("/destinations/" + str(destination["destination_id"]))
 
-@app.route("/remove/<int:destination_id>", methods=["GET", "POST"])
+@app.route("/remove_destination/<int:destination_id>", methods=["GET", "POST"])
 def remove_trip_destination(destination_id):
     destination = get_destination(destination_id)
 
