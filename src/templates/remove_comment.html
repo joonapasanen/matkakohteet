@@ -2,6 +2,7 @@
 block content %}
 <form action="/remove_comment/{{ comment.comment_id }}" method="post">
   <p>Haluatko varmasti poistaa kommentin?</p>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" name="continue" value="Jatka" />
   <input type="submit" name="cancel" value="Peruuta" />
 </form>

@@ -23,4 +23,4 @@ flask --app src/app.py run
 - [x] Käyttäjä pystyy etsimään matkakohteita hakusanalla.
 - [x] Sovelluksessa on käyttäjäsivut, jotka näyttävät tilastoja ja käyttäjän lisäämät matkakohteet.
 - [x] Käyttäjä pystyy valitsemaan matkakohteelle yhden tai useamman luokittelun (esim. hintaluokka ja arvostelu).
-- [ ] Käyttäjä pystyy kommentoimaan matkakohteita.
+- [x] Käyttäjä pystyy kommentoimaan matkakohteita.

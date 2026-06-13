@@ -18,6 +18,7 @@
 
 <h2>Lisää kommentti</h2>
 <form action="/add_comment/{{ destination.destination_id }}" method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <textarea
     name="comment"
     rows="5"

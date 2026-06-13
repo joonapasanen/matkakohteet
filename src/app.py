@@ -58,6 +58,10 @@ def destinations():
 def new_destination():
     if "user_id" not in session:
         return redirect("/login")
+    
+    csrf_token = request.form.get("csrf_token")
+    if csrf_token != session.get("csrf_token"):
+        return "CSRF-virhe", 403
 
     name = request.form["name"]
     description = request.form["description"]
@@ -83,6 +87,11 @@ def edit_destination(destination_id):
         return render_template("edit.html", destination=destination)
 
     if request.method == "POST":
+
+        csrf_token = request.form.get("csrf_token")
+        if csrf_token != session.get("csrf_token"):
+            return "CSRF-virhe", 403
+    
         description = request.form["description"]
         update_destination(destination["destination_id"], description)
         return redirect("/destinations/" + str(destination["destination_id"]))
@@ -96,6 +105,9 @@ def remove_trip_destination(destination_id):
 
     if request.method == "POST":
         if "continue" in request.form:
+            csrf_token = request.form.get("csrf_token")
+            if csrf_token != session.get("csrf_token"):
+                return "CSRF-virhe", 403
             remove_destination(destination["destination_id"])
         return redirect("/")
 
@@ -120,6 +132,10 @@ def user_profile(user_id):
 def add_comment_route(destination_id):
     if "user_id" not in session:
         return redirect("/login")
+    
+    csrf_token = request.form.get("csrf_token")
+    if csrf_token != session.get("csrf_token"):
+        return "CSRF-virhe", 403
 
     user_id = session["user_id"]
     comment = request.form["comment"]
@@ -142,5 +158,10 @@ def remove_comment_route(comment_id):
 
     if request.method == "POST":
         if "continue" in request.form:
+
+            csrf_token = request.form.get("csrf_token")
+            if csrf_token != session.get("csrf_token"):
+                return "CSRF-virhe", 403
+
             remove_comment(comment["comment_id"])
         return redirect("/destinations/" + str(destination_id))

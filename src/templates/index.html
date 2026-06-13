@@ -8,6 +8,7 @@ content %}
 <div class="add-destination">
   <h2>Uusi matkakohde</h2>
   <form action="/new_destination" method="post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <p>
       Matkakohde: <br />
       <input type="text" name="name" required />

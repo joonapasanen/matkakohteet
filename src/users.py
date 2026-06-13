@@ -1,4 +1,5 @@
 import sqlite3
+import secrets
 from flask import session
 import db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -26,6 +27,7 @@ def login_user(username, password):
     if check_password_hash(password_hash, password):
         session["username"] = username
         session["user_id"] = user_id
+        session["csrf_token"] = secrets.token_hex(16)
         return True
     else:
         return False
@@ -35,6 +37,8 @@ def logout_user():
         del session["username"]
     if "user_id" in session:
         del session["user_id"]
+    if "csrf_token" in session:
+        del session["csrf_token"]
 
 def get_user(user_id):
     sql = "SELECT user_id, username FROM Users WHERE user_id = ?"
