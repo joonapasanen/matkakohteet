@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect
 import config
 import db
-from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination, search, get_destinations_by_user
+from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination, search, get_destinations_by_user, get_user_stats
 from users import register_user, login_user, logout_user, get_user
 
 app = Flask(__name__)
@@ -108,5 +108,6 @@ def user_profile(user_id):
         return "Käyttäjää ei löytynyt", 404
     
     user_destinations = get_destinations_by_user(user_id)
+    stats = get_user_stats(user_id)
 
-    return render_template("user.html", user=user, destinations=user_destinations)
+    return render_template("user.html", user=user, destinations=user_destinations, stats=stats)

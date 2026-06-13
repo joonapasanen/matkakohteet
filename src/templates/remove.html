@@ -1,15 +1,8 @@
-<!doctype html>
-<html lang="fi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Poista kohde</title>
-  </head>
-  <body>
-    <form action="/remove/{{ destination.destination_id }}" method="post">
-      <p>Haluatko varmasti poistaa viestin?</p>
-      <input type="submit" name="continue" value="Jatka" />
-      <input type="submit" name="cancel" value="Peruuta" />
-    </form>
-  </body>
-</html>
+{% extends "layout.html" %} {% block title %}Poista kohde{% endblock %} {% block
+content %}
+<form action="/remove/{{ destination.destination_id }}" method="post">
+  <p>Haluatko varmasti poistaa viestin?</p>
+  <input type="submit" name="continue" value="Jatka" />
+  <input type="submit" name="cancel" value="Peruuta" />
+</form>
+{% endblock %}

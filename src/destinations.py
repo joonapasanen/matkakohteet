@@ -69,3 +69,17 @@ def get_destinations_by_user(user_id):
         ORDER BY d.destination_id DESC
     """
     return db.query(sql, [user_id])
+
+def get_user_stats(user_id):
+    sql = """
+        SELECT COUNT(*) AS destination_count
+        FROM Destinations
+        WHERE user_id = ?
+    """
+    rows = db.query(sql, [user_id])
+    if not rows:
+        return {"destination_count": 0}  # Palautetaan oletusarvo, jos käyttäjällä ei ole kohteita
+    row = rows[0]
+    return {
+        "destination_count": row["destination_count"],
+    }
