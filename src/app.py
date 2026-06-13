@@ -1,9 +1,8 @@
-import sqlite3
 from flask import Flask, render_template, request, session, redirect
 import config
 import db
-from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination, search
-from users import register_user, login_user, logout_user
+from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination, search, get_destinations_by_user
+from users import register_user, login_user, logout_user, get_user
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -101,3 +100,13 @@ def search_results():
     query = request.args.get("query")
     results = search(query) if query else []
     return render_template("search.html", query=query, results=results)
+
+@app.route("/users/<int:user_id>")
+def user_profile(user_id):
+    user = get_user(user_id)
+    if not user:
+        return "Käyttäjää ei löytynyt", 404
+    
+    user_destinations = get_destinations_by_user(user_id)
+
+    return render_template("user.html", user=user, destinations=user_destinations)

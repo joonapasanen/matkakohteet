@@ -1,10 +1,17 @@
 import db
 
 def get_destinations():
-    sql = """SELECT destination_id, name, user_id, description, COUNT(destination_id) total
-             FROM Destinations
-             GROUP BY destination_id
-             ORDER BY destination_id DESC"""
+    sql = """
+        SELECT
+            d.destination_id,
+            d.name,
+            d.description,
+            d.user_id,
+            u.username
+        FROM Destinations d
+        JOIN Users u ON d.user_id = u.user_id
+        ORDER BY d.destination_id DESC
+    """
     return db.query(sql)
 
 def add_destination(name, description, user_id):
@@ -14,8 +21,21 @@ def add_destination(name, description, user_id):
     return thread_id
 
 def get_destination(destination_id):
-    sql = "SELECT destination_id, description, name, user_id FROM Destinations WHERE destination_id = ?"
-    return db.query(sql, [destination_id])[0]
+    sql = """
+        SELECT
+            d.destination_id,
+            d.name,
+            d.description,
+            d.user_id,
+            u.username
+        FROM Destinations d
+        JOIN Users u ON d.user_id = u.user_id
+        WHERE d.destination_id = ?
+    """
+    rows = db.query(sql, [destination_id])
+    if not rows:
+        return None
+    return rows[0]
 
 def update_destination(destination_id, description):
     sql = "UPDATE Destinations SET description = ? WHERE destination_id = ?"
@@ -35,3 +55,17 @@ def search(query):
              ORDER BY destination_id DESC"""
     return db.query(sql, ["%" + query + "%", "%" + query + "%"])
 
+def get_destinations_by_user(user_id):
+    sql = """
+        SELECT
+            d.destination_id,
+            d.name,
+            d.description,
+            d.user_id,
+            u.username
+        FROM Destinations d
+        JOIN Users u ON d.user_id = u.user_id
+        WHERE d.user_id = ?
+        ORDER BY d.destination_id DESC
+    """
+    return db.query(sql, [user_id])

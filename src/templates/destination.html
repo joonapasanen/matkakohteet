@@ -1,7 +1,11 @@
 {% extends "layout.html" %} {% block title %}{{destination.name}}{% endblock %}
 {% block content %}
-<h1>{{destination.name}}</h1>
-<p>{{destination.description}}</p>
+<h1>{{ destination.name }}</h1>
+<p>{{ destination.description }}</p>
+<p>
+  Lähettäjä:
+  <a href="/users/{{ destination.user_id }}"> {{ destination.username }} </a>
+</p>
 {% if destination.user_id == session.user_id %}
 <p>
   <a href="/edit/{{ destination.destination_id }}">Muokkaa</a> |

@@ -1,0 +1,29 @@
+{% extends "layout.html" %} {% block title %}Käyttäjä {{user.username}}{%
+endblock %} {% block content %}
+<h1>Käyttäjäprofiili</h1>
+
+<p><strong>Käyttäjänimi:</strong> {{ user.username }}</p>
+<p><strong>Käyttäjä ID:</strong> {{ user.user_id }}</p>
+
+<hr />
+
+<h2>Lisätyt matkakohteet</h2>
+
+{% if destinations %}
+<ul>
+  {% for destination in destinations %}
+  <li>
+    <a href="/destinations/{{ destination.destination_id }}">
+      {{ destination.name }}
+    </a>
+    <br />
+    <small>{{ destination.description }}</small>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Ei lisättyjä matkakohteita.</p>
+{% endif %}
+
+<p><a href="/">Etusivulle</a></p>
+{% endblock %}

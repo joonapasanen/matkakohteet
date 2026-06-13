@@ -35,3 +35,14 @@ def logout_user():
         del session["username"]
     if "user_id" in session:
         del session["user_id"]
+
+def get_user(user_id):
+    sql = "SELECT user_id, username FROM Users WHERE user_id = ?"
+    rows = db.query(sql, [user_id])
+    if not rows:
+        return None
+    row = rows[0]
+    return {
+        "user_id": row[0],
+        "username": row[1],
+    }

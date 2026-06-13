@@ -21,14 +21,20 @@ content %}
   </form>
 </div>
 {% endif %}
+
 <hr />
+
 {% if destinations %} {% for destination in destinations %}
 <div class="destination">
-  <a href="/destinations/{{ destination.destination_id }}"
-    >{{ destination.name }}</a
-  >
+  <a href="/destinations/{{ destination.destination_id }}">
+    {{ destination.name }}
+  </a>
+  <br />
+  <small>
+    Lähettäjä:
+    <a href="/users/{{ destination.user_id }}"> {{ destination.username }} </a>
+  </small>
 </div>
 {% endfor %} {% else %}
 <p>Ei lisättyjä matkakohteita...</p>
-
 {% endif %} {% endblock %}
