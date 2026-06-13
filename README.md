@@ -1,5 +1,7 @@
 # matkakohteet
 
+Sovellus johon käyttäjä voi lisätä arvosteluja matkakohteista, ja kommentoida toisten lisäämiä kohteita.
+
 ## Käynnistysohjeet
 
 Luo tietokanta komennolla:
