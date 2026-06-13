@@ -1,10 +1,9 @@
 import sqlite3
-from flask import Flask
-from flask import render_template, request, session, redirect
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, render_template, request, session, redirect
 import config
 import db
 from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination, search
+from users import register_user, login_user, logout_user
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -25,18 +24,12 @@ def create():
     password2 = request.form["password2"]
     if password1 != password2:
         return "VIRHE: salasanat eivät ole samat"
-    password_hash = generate_password_hash(password1)
 
-    try:
-        sql = "INSERT INTO Users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
-        session["username"] = username
-        session["user_id"] = db.last_insert_id()
+    if register_user(username, password1):
         return redirect("/")
-        
-    except sqlite3.IntegrityError:
+    else:
         return "VIRHE: tunnus on jo varattu"
-    
+
 @app.route("/login")
 def login():
     return render_template("login.html")
@@ -46,22 +39,14 @@ def login_form():
     username = request.form["username"]
     password = request.form["password"]
     
-    sql = "SELECT password_hash, user_id FROM Users WHERE username = ?"
-    password_hash = db.query(sql, [username])[0][0]
-    user_id = db.query(sql, [username])[0][1]
-
-    if check_password_hash(password_hash, password):
-        session["username"] = username
-        session["user_id"] = user_id
-
+    if login_user(username, password):
         return redirect("/")
     else:
         return "VIRHE: väärä tunnus tai salasana"
 
 @app.route("/logout")
 def logout():
-    del session["username"]
-    del session["user_id"]
+    logout_user()
     return redirect("/")
 
 @app.route("/destinations", methods=["GET"])
@@ -70,13 +55,17 @@ def destinations():
     return render_template("destinations.html", destinations=destinations, session=session)
 
 @app.route("/new_destination", methods=["POST"])
-def new_thread():
+def new_destination():
+    if "user_id" not in session:
+        return redirect("/login")
+
     name = request.form["name"]
     description = request.form["description"]
     user_id = session["user_id"]
 
     add_destination(name, description, user_id)
-    return redirect("/")
+    destination_id = db.last_insert_id()
+    return redirect("/destinations/" + str(destination_id))
 
 @app.route("/destinations/<int:destination_id>")
 def show_destination(destination_id):
@@ -94,7 +83,7 @@ def edit_destination(destination_id):
         description = request.form["description"]
         update_destination(destination["destination_id"], description)
         return redirect("/destinations/" + str(destination["destination_id"]))
-    
+
 @app.route("/remove/<int:destination_id>", methods=["GET", "POST"])
 def remove_trip_destination(destination_id):
     destination = get_destination(destination_id)
@@ -106,7 +95,7 @@ def remove_trip_destination(destination_id):
         if "continue" in request.form:
             remove_destination(destination["destination_id"])
         return redirect("/")
-    
+
 @app.route("/search")
 def search_results():
     query = request.args.get("query")

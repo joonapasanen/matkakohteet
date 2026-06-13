@@ -2,9 +2,15 @@
 
 Käynnistysohjeet:
 
-Luo tietokanta komennolla: sqlite3 database.db < schema.sql
+Luo tietokanta komennolla:
+```
+sqlite3 database.db < schema.sql
+```
 
-Käynnistä sovellus komennolla: flask --app src/app.py run
+Käynnistä sovellus komennolla:
+```
+flask --app src/app.py run
+```
 
 Sovelluksen toiminnallisuus:
 

@@ -31,7 +31,7 @@ def search(query):
                     user_id,
                     description
              FROM Destinations
-             WHERE description LIKE ?
+             WHERE description LIKE ? OR name LIKE ?
              ORDER BY destination_id DESC"""
-    return db.query(sql, ["%" + query + "%"])
+    return db.query(sql, ["%" + query + "%", "%" + query + "%"])
 
