@@ -72,3 +72,7 @@ nav li:not(:last-of-type) {
 .add-destination {
   margin-top: 10px;
 }
+
+.content li {
+  margin-left: 25px;
+}

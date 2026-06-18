@@ -17,24 +17,17 @@ content %}
       Kuvaus: <br />
       <textarea name="description" rows="5" cols="40"></textarea>
     </p>
+    {% for category in categories %}
     <p>
-      Hintaluokka: <br />
-      <select name="price_category_id">
-        <option value="1">Edullinen</option>
-        <option value="2">Kohtuullinen</option>
-        <option value="3">Kallis</option>
+      {{category}}: <br />
+      <select name="categories">
+        <option value="">(valitse)</option>
+        {% for option in categories[category] %}
+        <option value="{{category}}:{{option}}">{{option}}</option>
+        {% endfor %}
       </select>
     </p>
-    <p>
-      Arvostelu (1-5): <br />
-      <select name="rating">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5" selected>5</option>
-      </select>
-    </p>
+    {% endfor %}
     <input type="submit" value="Lähetä" />
   </form>
 </div>

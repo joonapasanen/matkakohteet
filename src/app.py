@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, session, redirect
 import config
-import db
-from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination, search, get_destinations_by_user, get_user_stats
+from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination, search, get_destinations_by_user, get_user_stats, get_categories, get_destination_categories
 from users import register_user, login_user, logout_user, get_user
 from comments import add_comment, get_comments, get_comment, remove_comment
 
@@ -11,7 +10,8 @@ app.secret_key = config.secret_key
 @app.route("/")
 def index():
     destinations = get_destinations()
-    return render_template("index.html", destinations=destinations)
+    categories = get_categories()
+    return render_template("index.html", destinations=destinations, categories=categories)
 
 @app.route("/register")
 def register():
@@ -66,18 +66,23 @@ def new_destination():
     name = request.form["name"]
     description = request.form["description"]
     user_id = session["user_id"]
-    price_category_id = request.form["price_category_id"]
-    rating = request.form["rating"]  
 
-    add_destination(name, description, user_id, price_category_id, rating)
-    destination_id = db.last_insert_id()
+    categories = []
+    
+    for entry in request.form.getlist("categories"):
+        if entry:
+            parts = entry.split(":")
+            categories.append((parts[0], parts[1]))
+    
+    destination_id = add_destination(name, description, user_id, categories)
     return redirect("/destinations/" + str(destination_id))
 
 @app.route("/destinations/<int:destination_id>")
 def show_destination(destination_id):
     destination = get_destination(destination_id)
+    categories = get_destination_categories(destination_id)
     comments = get_comments(destination_id)
-    return render_template("destination.html", destination=destination, comments=comments)
+    return render_template("destination.html", destination=destination, categories=categories, comments=comments)
 
 @app.route("/edit/<int:destination_id>", methods=["GET", "POST"])
 def edit_destination(destination_id):
