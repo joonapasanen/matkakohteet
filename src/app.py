@@ -92,6 +92,8 @@ def edit_destination(destination_id):
         return render_template("edit.html", destination=destination)
 
     if request.method == "POST":
+        if destination["user_id"] != session["user_id"]:
+            return "Ei oikeuksia muokata kohdetta", 403
 
         csrf_token = request.form.get("csrf_token")
         if csrf_token != session.get("csrf_token"):
@@ -109,6 +111,9 @@ def remove_trip_destination(destination_id):
         return render_template("remove_destination.html", destination=destination)
 
     if request.method == "POST":
+        if destination["user_id"] != session["user_id"]:
+            return "Ei oikeuksia muokata kohdetta", 403
+
         if "continue" in request.form:
             csrf_token = request.form.get("csrf_token")
             if csrf_token != session.get("csrf_token"):
@@ -162,6 +167,9 @@ def remove_comment_route(comment_id):
         return render_template("remove_comment.html", comment=comment)
 
     if request.method == "POST":
+        if comment["user_id"] != session["user_id"]:
+            return "Ei oikeuksia muokata kohdetta", 403
+
         if "continue" in request.form:
 
             csrf_token = request.form.get("csrf_token")
