@@ -67,6 +67,9 @@ def new_destination():
     description = request.form["description"]
     user_id = session["user_id"]
 
+    if not name or len(name) > 75 or len(description) > 5000:
+        return "Syötteet liian pitkiä", 403
+
     categories = []
     
     for entry in request.form.getlist("categories"):
