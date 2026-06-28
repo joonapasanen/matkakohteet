@@ -1,5 +1,10 @@
 {% extends "layout.html" %} {% block title %}Muokkaa{% endblock %}{% block
-content %}
+content %} {% for message in get_flashed_messages() %}
+<p>
+  <b>{{ message }}</b>
+</p>
+{% endfor %}
+
 <form action="/edit/{{ destination.destination_id }}" method="post">
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <p>

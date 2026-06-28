@@ -1,5 +1,9 @@
 {% extends "layout.html" %} {% block title %}Käyttäjä {{user.username}}{%
-endblock %} {% block content %}
+endblock %} {% block content %} {% for message in get_flashed_messages() %}
+<p>
+  <b>{{ message }}</b>
+</p>
+{% endfor %}
 <h1>Käyttäjäprofiili</h1>
 
 <p><strong>Käyttäjänimi:</strong> {{ user.username }}</p>

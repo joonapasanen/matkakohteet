@@ -1,5 +1,9 @@
 {% extends "layout.html" %} {% block title %}Etusivu{% endblock %} {% block
-content %}
+content %} {% for message in get_flashed_messages() %}
+<p>
+  <b>{{ message }}</b>
+</p>
+{% endfor %}
 
 <h2>Etusivu</h2>
 
@@ -11,7 +15,14 @@ content %}
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <p>
       Matkakohde: <br />
-      <input type="text" name="name" maxlength="75" required />
+      <input
+        type="text"
+        name="name"
+        maxlength="75"
+        required
+        pattern=".*\S.*"
+        title="Nimi ei saa olla tyhjä"
+      />
     </p>
     <p>
       Kuvaus: <br />

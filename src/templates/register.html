@@ -1,12 +1,16 @@
 {% extends "layout.html" %} {% block title %}Käyttäjän luonti{% endblock %} {%
-block content %}
+block content %} {% for message in get_flashed_messages() %}
+<p>
+  <b>{{ message }}</b>
+</p>
+{% endfor %}
 
 <div>
   <h2>Rekisteröidy</h2>
-  <form action="/create" method="post">
+  <form action="/register" method="POST">
     <p>
       Tunnus: <br />
-      <input type="text" name="username" />
+      <input type="text" name="username" value="{{ filled.username }}" />
     </p>
     <p>
       Salasana: <br />

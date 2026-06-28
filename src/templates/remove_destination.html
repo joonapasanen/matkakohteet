@@ -1,5 +1,9 @@
 {% extends "layout.html" %} {% block title %}Poista kohde{% endblock %} {% block
-content %}
+content %} {% for message in get_flashed_messages() %}
+<p>
+  <b>{{ message }}</b>
+</p>
+{% endfor %}
 <form
   action="/remove_destination/{{ destination.destination_id }}"
   method="post"

@@ -1,5 +1,9 @@
 {% extends "layout.html" %} {% block title %}Poista kommentti{% endblock %} {%
-block content %}
+block content %} {% for message in get_flashed_messages() %}
+<p>
+  <b>{{ message }}</b>
+</p>
+{% endfor %}
 <form action="/remove_comment/{{ comment.comment_id }}" method="post">
   <p>Haluatko varmasti poistaa kommentin?</p>
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
