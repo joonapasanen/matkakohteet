@@ -14,9 +14,10 @@ content %} {% for message in get_flashed_messages() %}
   <form action="/new_destination" method="post">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <p>
-      Matkakohde: <br />
+      <label for="name">Matkakohde:</label><br />
       <input
         type="text"
+        id="name"
         name="name"
         maxlength="75"
         required
@@ -25,8 +26,9 @@ content %} {% for message in get_flashed_messages() %}
       />
     </p>
     <p>
-      Kuvaus: <br />
+      <label for="description">Kuvaus:</label><br />
       <textarea
+        id="description"
         name="description"
         rows="5"
         maxlength="5000"
@@ -36,8 +38,8 @@ content %} {% for message in get_flashed_messages() %}
     </p>
     {% for category in categories %}
     <p>
-      {{category}}: <br />
-      <select name="categories">
+      <label for="{{category}}">{{category}}:</label><br />
+      <select id="{{category}}" name="categories">
         <option value="">(valitse)</option>
         {% for option in categories[category] %}
         <option value="{{category}}:{{option}}">{{option}}</option>

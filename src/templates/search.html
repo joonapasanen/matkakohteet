@@ -9,10 +9,10 @@
 
 <form class="search" action="/search" method="get">
   <p>
-    Hakusana: {% if query %}
-    <input type="text" name="query" value="{{ query }}" />
+    <label for="query">Hakusana:</label>{% if query %}
+    <input id="query" type="text" name="query" value="{{ query }}" />
     {% else %}
-    <input type="text" name="query" />
+    <input id="query" type="text" name="query" />
     {% endif %}
   </p>
   <input type="submit" value="Hae" />
