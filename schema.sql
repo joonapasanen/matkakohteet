@@ -39,6 +39,7 @@ CREATE TABLE Comments (
     destination_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     comment TEXT NOT NULL,
+    sent_at TEXT,
     FOREIGN KEY (destination_id) REFERENCES Destinations(destination_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
@@ -54,3 +55,5 @@ INSERT INTO Categories (title, value) VALUES
 ('Näköala', 'meri'),
 ('Näköala', 'kaupunki'),
 ('Näköala', 'vuoristo');
+
+CREATE INDEX idx_destination_comments ON Comments (destination_id);

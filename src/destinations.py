@@ -1,19 +1,25 @@
 import db
 
-def get_destinations():
+def get_destinations(page, page_size):
     sql = """
         SELECT
             d.destination_id,
             d.name,
             d.description,
             d.user_id,
-            u.username
+            u.username,
+            COUNT(c.comment_id) AS total, 
+            MAX(c.sent_at) AS last
         FROM Destinations d
         JOIN Users u ON d.user_id = u.user_id
+        LEFT JOIN Comments c ON d.destination_id = c.destination_id
+        GROUP BY d.destination_id
         ORDER BY d.destination_id DESC
+        LIMIT ? OFFSET ?
     """
-    return db.query(sql)
-
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [limit, offset])
 
 def add_destination(name, description, user_id, categories):
     sql = "INSERT INTO Destinations (user_id, name, description) VALUES (?, ?, ?)"
@@ -108,3 +114,7 @@ def get_destination_categories(destination_id):
     sql = "SELECT title, value FROM DestinationCategories WHERE destination_id = ?"
     categories = db.query(sql, [destination_id])
     return categories
+
+def destination_count():
+    sql = "SELECT COUNT(destination_id) AS count FROM Destinations"
+    return db.query(sql, [])[0]["count"]

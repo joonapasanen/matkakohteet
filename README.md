@@ -16,6 +16,18 @@ Käynnistä sovellus komennolla:
 flask --app src/app.py run
 ```
 
+## Sovelluksen toiminta suurella tietomäärällä
+
+Kun tietokanta on luotu, sen voi alustaa suurella tietomäärällä komennolla:
+
+```
+python seed.py
+```
+
+Tämä lisää sovellukseen 1000 käyttäjää, satatuhatta matkakohdetta ja miljoona kommenttia.
+
+Tietokanta käyttää indeksejä ja sovellus sivutusta, jonka seurauksena sovellus toimii tehokkaasti suurtakin tietomäärä käyttäen. Jos indeksejä ei ole käytössä niin sovelluksen etusivun lataamiseen menee noin 2.5-3.5 sekunttia, mutta kun ne otetaan käyttöön aika tippuu noin 0.01-0.05 sekunttiin.
+
 ## Sovelluksen toiminnallisuus
 
 - [x] Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.

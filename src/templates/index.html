@@ -59,11 +59,20 @@ content %} {% for message in get_flashed_messages() %}
     {{ destination.name }}
   </a>
   <br />
+  {{ destination.total }} kommenttia, uusin {{destination.last}}
+  <br />
   <small>
     Lähettäjä:
     <a href="/users/{{ destination.user_id }}"> {{ destination.username }} </a>
   </small>
 </div>
-{% endfor %} {% else %}
+{% endfor %}
+<p>
+  <a href="/{{ page - 1 }}">&lt;&lt;</a>
+  Sivu {{ page }}/{{ page_count }}
+  <a href="/{{ page + 1 }}">&gt;&gt;</a>
+</p>
+<hr />
+{% else %}
 <p>Ei lisättyjä matkakohteita...</p>
 {% endif %} {% endblock %}

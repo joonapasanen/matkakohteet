@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, session, redirect, flash
+from flask import Flask, render_template, request, session, redirect, flash, g
+import math
+import time
 import config
 import destinations
 import users
@@ -8,10 +10,27 @@ app = Flask(__name__)
 app.secret_key = config.secret_key
 
 @app.route("/")
-def index():
-    all_destinations = destinations.get_destinations()
+@app.route("/<int:page>")
+def index(page=1):
+    page_size = 10
+    destination_count = destinations.destination_count()
+    page_count = math.ceil(destination_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+
+    all_destinations = destinations.get_destinations(page, page_size)
     categories = destinations.get_categories()
-    return render_template("index.html", destinations=all_destinations, categories=categories)
+    return render_template(
+        "index.html", 
+        page=page, 
+        page_count=page_count, 
+        destinations=all_destinations, 
+        categories=categories
+    )
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -63,11 +82,6 @@ def login():
 def logout():
     users.logout_user()
     return redirect("/")
-
-@app.route("/destinations", methods=["GET"])
-def destinations_page():
-    all_destinations = destinations.get_destinations()
-    return render_template("destinations.html", destinations=all_destinations, session=session)
 
 @app.route("/new_destination", methods=["POST"])
 def new_destination():
@@ -210,3 +224,13 @@ def remove_comment_route(comment_id):
 
             comments.remove_comment(comment["comment_id"])
         return redirect("/destinations/" + str(destination_id))
+
+@app.before_request
+def before_request():
+    g.start_time = time.time()
+
+@app.after_request
+def after_request(response):
+    elapsed_time = round(time.time() - g.start_time, 2)
+    print("elapsed time:", elapsed_time, "s")
+    return response
