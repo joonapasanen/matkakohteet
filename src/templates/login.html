@@ -14,12 +14,15 @@ block content %} {% for message in get_flashed_messages() %}
         type="text"
         name="username"
         value="{{ filled.username }}"
+        maxlength="50"
         required
+        pattern=".*\S.*"
+        title="Käyttäjänimi ei saa olla tyhjä"
       />
     </p>
     <p>
       Salasana: <br />
-      <input type="password" name="password" required />
+      <input type="password" name="password" maxlength="128" required title="Salasana ei saa olla tyhjä"/>
     </p>
     <button type="submit">Kirjaudu sisään</button>
   </form>

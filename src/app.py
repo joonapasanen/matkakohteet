@@ -18,9 +18,16 @@ def register():
     if request.method == "GET":
         return render_template("register.html", filled={})
 
-    username = request.form["username"]
+    username = request.form["username"].strip()
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+
+    if not username or not password1:
+        flash("VIRHE: Ei syötettä")
+        return render_template("register.html", filled={"username": username})
+    if len(username) > 50 or len(password1) > 128:
+        flash("VIRHE: Liian pitkä syöte")
+        return render_template("register.html", filled={"username": username})
     if password1 != password2:
         flash("VIRHE: Salasanat eivät ole samat")
         return render_template("register.html", filled={"username": username})
@@ -36,8 +43,16 @@ def login():
     if request.method == "GET":
         return render_template("login.html", filled={})
 
-    username = request.form["username"]
+    username = request.form["username"].strip()
     password = request.form["password"]
+
+    if not username or not password:
+        flash("VIRHE: Ei syötettä")
+        return render_template("login.html", filled={"username": username})
+    if len(username) > 50 or len(password) > 128:
+        flash("VIRHE: Liian pitkä syöte")
+        return render_template("login.html", filled={"username": username})
+
     if users.login_user(username, password):
         return redirect("/")
     else:
@@ -89,8 +104,8 @@ def new_destination():
 def show_destination(destination_id):
     destination = destinations.get_destination(destination_id)
     categories = destinations.get_destination_categories(destination_id)
-    destination_comments = comments.get_comments(destination_id)
-    return render_template("destination.html", destination=destination, categories=categories, comments=destination_comments)
+    all_comments = comments.get_comments(destination_id)
+    return render_template("destination.html", destination=destination, categories=categories, comments=all_comments)
 
 @app.route("/edit/<int:destination_id>", methods=["GET", "POST"])
 def edit_destination(destination_id):
