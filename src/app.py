@@ -1,17 +1,17 @@
 from flask import Flask, render_template, request, session, redirect, flash
 import config
-from destinations import get_destinations, add_destination, get_destination, update_destination, remove_destination, search, get_destinations_by_user, get_user_stats, get_categories, get_destination_categories
-from users import register_user, login_user, logout_user, get_user
-from comments import add_comment, get_comments, get_comment, remove_comment
+import destinations
+import users
+import comments
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    destinations = get_destinations()
-    categories = get_categories()
-    return render_template("index.html", destinations=destinations, categories=categories)
+    all_destinations = destinations.get_destinations()
+    categories = destinations.get_categories()
+    return render_template("index.html", destinations=all_destinations, categories=categories)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -25,7 +25,7 @@ def register():
         flash("VIRHE: Salasanat eivät ole samat")
         return render_template("register.html", filled={"username": username})
 
-    if register_user(username, password1):
+    if users.register_user(username, password1):
         return redirect("/")
     else:
         flash("VIRHE: Tunnus on jo varattu")
@@ -38,7 +38,7 @@ def login():
 
     username = request.form["username"]
     password = request.form["password"]
-    if login_user(username, password):
+    if users.login_user(username, password):
         return redirect("/")
     else:
         flash("VIRHE: Väärä tunnus tai salasana")
@@ -46,13 +46,13 @@ def login():
 
 @app.route("/logout")
 def logout():
-    logout_user()
+    users.logout_user()
     return redirect("/")
 
 @app.route("/destinations", methods=["GET"])
-def destinations():
-    destinations = get_destinations()
-    return render_template("destinations.html", destinations=destinations, session=session)
+def destinations_page():
+    all_destinations = destinations.get_destinations()
+    return render_template("destinations.html", destinations=all_destinations, session=session)
 
 @app.route("/new_destination", methods=["POST"])
 def new_destination():
@@ -82,19 +82,19 @@ def new_destination():
             parts = entry.split(":")
             categories.append((parts[0], parts[1]))
     
-    destination_id = add_destination(name, description, user_id, categories)
+    destination_id = destinations.add_destination(name, description, user_id, categories)
     return redirect("/destinations/" + str(destination_id))
 
 @app.route("/destinations/<int:destination_id>")
 def show_destination(destination_id):
-    destination = get_destination(destination_id)
-    categories = get_destination_categories(destination_id)
-    comments = get_comments(destination_id)
-    return render_template("destination.html", destination=destination, categories=categories, comments=comments)
+    destination = destinations.get_destination(destination_id)
+    categories = destinations.get_destination_categories(destination_id)
+    destination_comments = comments.get_comments(destination_id)
+    return render_template("destination.html", destination=destination, categories=categories, comments=destination_comments)
 
 @app.route("/edit/<int:destination_id>", methods=["GET", "POST"])
 def edit_destination(destination_id):
-    destination = get_destination(destination_id)
+    destination = destinations.get_destination(destination_id)
 
     if request.method == "GET":
         return render_template("edit.html", destination=destination)
@@ -110,12 +110,12 @@ def edit_destination(destination_id):
             return redirect("/edit/" + str(destination_id))
 
         description = request.form["description"]
-        update_destination(destination["destination_id"], description)
+        destinations.update_destination(destination["destination_id"], description)
         return redirect("/destinations/" + str(destination["destination_id"]))
 
 @app.route("/remove_destination/<int:destination_id>", methods=["GET", "POST"])
 def remove_trip_destination(destination_id):
-    destination = get_destination(destination_id)
+    destination = destinations.get_destination(destination_id)
 
     if request.method == "GET":
         return render_template("remove_destination.html", destination=destination)
@@ -130,24 +130,24 @@ def remove_trip_destination(destination_id):
             if csrf_token != session.get("csrf_token"):
                 flash("VIRHE: CSRF-virhe")
                 return redirect("/remove_destination/" + str(destination_id))
-            remove_destination(destination["destination_id"])
+            destinations.remove_destination(destination["destination_id"])
         return redirect("/")
 
 @app.route("/search")
 def search_results():
     query = request.args.get("query")
-    results = search(query) if query else []
+    results = destinations.search(query) if query else []
     return render_template("search.html", query=query, results=results)
 
 @app.route("/users/<int:user_id>")
 def user_profile(user_id):
-    user = get_user(user_id)
+    user = users.get_user(user_id)
     if not user:
         flash("VIRHE: Käyttäjää ei löytynyt")
         return redirect("/")
     
-    user_destinations = get_destinations_by_user(user_id)
-    stats = get_user_stats(user_id)
+    user_destinations = destinations.get_destinations_by_user(user_id)
+    stats = destinations.get_user_stats(user_id)
 
     return render_template("user.html", user=user, destinations=user_destinations, stats=stats)
 
@@ -164,13 +164,13 @@ def add_comment_route(destination_id):
     user_id = session["user_id"]
     comment = request.form["comment"]
 
-    add_comment(destination_id, user_id, comment)
+    comments.add_comment(destination_id, user_id, comment)
 
     return redirect(f"/destinations/{destination_id}")
 
 @app.route("/remove_comment/<int:comment_id>", methods=["GET", "POST"])
 def remove_comment_route(comment_id):
-    comment = get_comment(comment_id)
+    comment = comments.get_comment(comment_id)
 
     if comment is None:
         flash("VIRHE: Kommenttia ei löytynyt")
@@ -193,5 +193,5 @@ def remove_comment_route(comment_id):
                 flash("VIRHE: CSRF-virhe")
                 return redirect("/remove_comment/" + str(comment_id))
 
-            remove_comment(comment["comment_id"])
+            comments.remove_comment(comment["comment_id"])
         return redirect("/destinations/" + str(destination_id))
