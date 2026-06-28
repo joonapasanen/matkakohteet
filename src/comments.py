@@ -2,8 +2,8 @@ import db
 
 def add_comment(destination_id, user_id, comment):
     sql = """
-        INSERT INTO Comments (destination_id, user_id, comment) 
-        VALUES (?, ?, ?)
+        INSERT INTO Comments (destination_id, user_id, comment, sent_at) 
+        VALUES (?, ?, ?, datetime('now'))
     """
     db.execute(sql, [destination_id, user_id, comment])
 

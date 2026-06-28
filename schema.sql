@@ -27,13 +27,6 @@ CREATE TABLE DestinationCategories (
     FOREIGN KEY (destination_id) REFERENCES Destinations(destination_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Images (
-    image_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    destination_id INTEGER NOT NULL,
-    image_url TEXT NOT NULL,
-    FOREIGN KEY (destination_id) REFERENCES Destinations(destination_id) ON DELETE CASCADE
-);
-
 CREATE TABLE Comments (
     comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
     destination_id INTEGER NOT NULL,

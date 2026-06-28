@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, session, redirect, flash, g
 import math
 import time
+
+from flask import Flask, render_template, request, session, redirect, flash, g
+
 import markupsafe
 import config
 import destinations
@@ -8,7 +10,7 @@ import users
 import comments
 
 app = Flask(__name__)
-app.secret_key = config.secret_key
+app.secret_key = config.SECRET_KEY
 
 @app.route("/")
 @app.route("/<int:page>")
@@ -27,9 +29,9 @@ def index(page=1):
     categories = destinations.get_categories()
     return render_template(
         "index.html", 
-        page=page, 
-        page_count=page_count, 
-        destinations=all_destinations, 
+        page=page,
+        page_count=page_count,
+        destinations=all_destinations,
         categories=categories
     )
 
@@ -54,9 +56,9 @@ def register():
 
     if users.register_user(username, password1):
         return redirect("/")
-    else:
-        flash("VIRHE: Tunnus on jo varattu")
-        return render_template("register.html", filled={"username": username})
+
+    flash("VIRHE: Tunnus on jo varattu")
+    return render_template("register.html", filled={"username": username})
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -75,9 +77,9 @@ def login():
 
     if users.login_user(username, password):
         return redirect("/")
-    else:
-        flash("VIRHE: Väärä tunnus tai salasana")
-        return render_template("login.html", filled={"username": username})
+
+    flash("VIRHE: Väärä tunnus tai salasana")
+    return render_template("login.html", filled={"username": username})
 
 @app.route("/logout")
 def logout():
@@ -88,7 +90,6 @@ def logout():
 def new_destination():
     if "user_id" not in session:
         return redirect("/login")
-    
     csrf_token = request.form.get("csrf_token")
     if csrf_token != session.get("csrf_token"):
         flash("VIRHE: CSRF-virhe")
@@ -106,12 +107,11 @@ def new_destination():
         return redirect("/new_destination")
 
     categories = []
-    
     for entry in request.form.getlist("categories"):
         if entry:
             parts = entry.split(":")
             categories.append((parts[0], parts[1]))
-    
+
     destination_id = destinations.add_destination(name, description, user_id, categories)
     return redirect("/destinations/" + str(destination_id))
 
@@ -120,7 +120,12 @@ def show_destination(destination_id):
     destination = destinations.get_destination(destination_id)
     categories = destinations.get_destination_categories(destination_id)
     all_comments = comments.get_comments(destination_id)
-    return render_template("destination.html", destination=destination, categories=categories, comments=all_comments)
+    return render_template(
+        "destination.html", 
+        destination=destination,
+        categories=categories,
+        comments=all_comments
+    )
 
 @app.route("/edit/<int:destination_id>", methods=["GET", "POST"])
 def edit_destination(destination_id):
@@ -175,7 +180,7 @@ def user_profile(user_id):
     if not user:
         flash("VIRHE: Käyttäjää ei löytynyt")
         return redirect("/")
-    
+
     user_destinations = destinations.get_destinations_by_user(user_id)
     stats = destinations.get_user_stats(user_id)
 
@@ -185,7 +190,7 @@ def user_profile(user_id):
 def add_comment_route(destination_id):
     if "user_id" not in session:
         return redirect("/login")
-    
+
     csrf_token = request.form.get("csrf_token")
     if csrf_token != session.get("csrf_token"):
         flash("VIRHE: CSRF-virhe")

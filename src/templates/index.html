@@ -61,7 +61,9 @@ content %} {% for message in get_flashed_messages() %}
     {{ destination.name }}
   </a>
   <br />
-  {{ destination.total }} kommenttia, uusin {{destination.last}}
+  {% if destination.total > 0 %} {{ destination.total }} kommenttia, uusin
+  {{destination.last}} {% else %} {{ destination.total }} kommenttia {% endif %}
+
   <br />
   <small>
     Lähettäjä:
