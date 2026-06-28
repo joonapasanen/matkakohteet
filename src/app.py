@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, flash, g
 import math
 import time
+import markupsafe
 import config
 import destinations
 import users
@@ -234,3 +235,9 @@ def after_request(response):
     elapsed_time = round(time.time() - g.start_time, 2)
     print("elapsed time:", elapsed_time, "s")
     return response
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)

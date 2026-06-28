@@ -17,10 +17,9 @@ def get_comments(destination_id):
     """
     return db.query(sql, [destination_id])
 
-
 def get_comment(comment_id):
     sql = """
-        SELECT c.comment_id, c.destination_id, c.comment, u.username 
+        SELECT c.comment_id, c.destination_id, c.comment, u.username, c.user_id 
         FROM Comments c
         JOIN Users u ON c.user_id = u.user_id
         WHERE c.comment_id = ?

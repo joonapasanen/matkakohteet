@@ -5,7 +5,7 @@
 </p>
 {% endfor %}
 <h1>{{ destination.name }}</h1>
-<p>{{ destination.description }}</p>
+<p>{{ destination.description | show_lines }}</p>
 
 {% if categories %}
 <p>Luokat:</p>
@@ -46,8 +46,8 @@
 <ul>
   {% for comment in comments %}
   <li>
-    <strong>{{ comment.username }}:</strong> {{ comment.comment }} {% if
-    comment.user_id == session.user_id %} |
+    <strong>{{ comment.username }}:</strong> {{ comment.comment | show_lines }}
+    {% if comment.user_id == session.user_id %} |
     <a href="/remove_comment/{{ comment.comment_id }}">Poista</a>
     {% endif %}
   </li>
