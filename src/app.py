@@ -1,6 +1,7 @@
 import math
 import time
 
+from urllib.parse import urlencode
 from flask import Flask, render_template, request, session, redirect, flash, g
 
 import markupsafe
@@ -27,12 +28,16 @@ def index(page=1):
 
     all_destinations = destinations.get_destinations(page, page_size)
     categories = destinations.get_categories()
+
+    filled = {arg: request.args[arg] for arg in ["name", "description"] if arg in request.args}
+
     return render_template(
         "index.html", 
         page=page,
         page_count=page_count,
         destinations=all_destinations,
-        categories=categories
+        categories=categories,
+        filled=filled
     )
 
 @app.route("/register", methods=["GET", "POST"])
@@ -99,12 +104,18 @@ def new_destination():
     description = request.form["description"].strip()
     user_id = session["user_id"]
 
-    if not name or not description:
+    if not name and description:
+        flash("VIRHE: Ei nimeä")
+        return redirect(f"/?{urlencode({"description": description})}")
+    if not description and name:
+        flash("VIRHE: Ei kuvausta")
+        return redirect(f"/?{urlencode({"name": name})}")
+    if not name and not description:
         flash("VIRHE: Ei syötettä")
-        return redirect("/new_destination")
+        return redirect("/")
     if len(name) > 75 or len(description) > 5000:
         flash("VIRHE: Liian pitkä syöte")
-        return redirect("/new_destination")
+        return redirect(f"/?{urlencode({"name": name, "description": description})}")
 
     categories = []
     for entry in request.form.getlist("categories"):

@@ -23,7 +23,7 @@ content %} {% for message in get_flashed_messages() %}
         required
         pattern=".*\S.*"
         title="Nimi ei saa olla tyhjä"
-      />
+      >{{filled.name}}</input>
     </p>
     <p>
       <label for="description">Kuvaus:</label><br />
@@ -34,7 +34,9 @@ content %} {% for message in get_flashed_messages() %}
         maxlength="5000"
         cols="40"
         required
-      ></textarea>
+      >
+{{filled.description}}</textarea
+      >
     </p>
     {% for category in categories %}
     <p>
