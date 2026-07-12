@@ -104,18 +104,12 @@ def new_destination():
     description = request.form["description"].strip()
     user_id = session["user_id"]
 
-    if not name and description:
-        flash("VIRHE: Ei nimeä")
-        return redirect(f"/?{urlencode({"description": description})}")
-    if not description and name:
-        flash("VIRHE: Ei kuvausta")
-        return redirect(f"/?{urlencode({"name": name})}")
-    if not name and not description:
+    if not name or not description:
         flash("VIRHE: Ei syötettä")
-        return redirect("/")
+        return redirect(f"/?{urlencode({"description": description})}")
     if len(name) > 75 or len(description) > 5000:
         flash("VIRHE: Liian pitkä syöte")
-        return redirect(f"/?{urlencode({"name": name, "description": description})}")
+        return redirect(f"/?{urlencode({"description": description})}")
 
     categories = []
     for entry in request.form.getlist("categories"):
