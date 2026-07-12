@@ -9,7 +9,14 @@ content %} {% for message in get_flashed_messages() %}
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <p>
     <label for="description">Viesti:</label><br />
-    <textarea id="description" name="description" rows="5" cols="40">
+    <textarea
+      id="description"
+      name="description"
+      rows="5"
+      cols="40"
+      maxlength="5000"
+      required
+    >
 {{ destination.description }}</textarea
     >
   </p>

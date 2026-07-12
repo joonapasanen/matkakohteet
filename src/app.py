@@ -99,7 +99,7 @@ def new_destination():
     description = request.form["description"].strip()
     user_id = session["user_id"]
 
-    if not name:
+    if not name or not description:
         flash("VIRHE: Ei syötettä")
         return redirect("/new_destination")
     if len(name) > 75 or len(description) > 5000:
@@ -145,6 +145,14 @@ def edit_destination(destination_id):
             return redirect("/edit/" + str(destination_id))
 
         description = request.form["description"]
+
+        if not description:
+            flash("VIRHE: Ei syötettä")
+            return redirect("/edit/<int:destination_id>")
+        if len(description) > 5000:
+            flash("VIRHE: Liian pitkä syöte")
+            return redirect("/edit/<int:destination_id>")
+
         destinations.update_destination(destination["destination_id"], description)
         return redirect("/destinations/" + str(destination["destination_id"]))
 
