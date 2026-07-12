@@ -199,6 +199,13 @@ def add_comment_route(destination_id):
     user_id = session["user_id"]
     comment = request.form["comment"]
 
+    if not comment:
+        flash("VIRHE: Ei syötettä")
+        return redirect(f"/destinations/{destination_id}")
+    if len(comment) > 75:
+        flash("VIRHE: Liian pitkä syöte")
+        return redirect(f"/destinations/{destination_id}")
+
     comments.add_comment(destination_id, user_id, comment)
 
     return redirect(f"/destinations/{destination_id}")
